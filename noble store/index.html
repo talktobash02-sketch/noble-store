@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noble Store | Premium Perfumes</title>
     
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -112,48 +111,41 @@
     </footer>
 
     <script>
-        // Fetch the data file that Decap CMS creates
-        fetch('data/products.json')
+        // Fetch products directly from your live Google Sheet Web App URL
+        const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyqJMtPqogjozqDJe6NwtHdtCEymK5DZEizo0CG_y9v26aYrOoW5VWjjzJOGmTvy_1lNQ/exec';
+
+        fetch(SHEET_URL)
             .then(response => response.json())
             .then(data => {
-                // Target your specific "products" class container
                 const productGrid = document.querySelector('.products');
                 productGrid.innerHTML = ''; 
                 
-                // Loop through every product the owner added and build the HTML
-                data.items.forEach(product => {
+                // Loop through every row/product in your Google Sheet
+                data.forEach(product => {
                     const card = document.createElement('div');
                     card.className = 'product-card';
                     
-                    // Automatically generate the WhatsApp link with the specific product name!
-                    const waLink = `https://wa.me/2348164821049?text=Hello%20Noble%20Store,%20I%20want%20to%20order%20${encodeURIComponent(product.title)}`;
+                    // Automatically generate the WhatsApp link using your sheet columns (NAME)
+                    const waLink = `https://wa.me/2348164821049?text=Hello%20Noble%20Store,%20I%20want%20to%20order%20${encodeURIComponent(product.NAME)}`;
                     
                     card.innerHTML = `
                         <div class="product-image">
-                            <img src="${product.image}" alt="${product.title}">
+                            <img src="${product.IMAGE}" alt="${product.NAME}">
                         </div>
                         <div class="product-info">
-                            <h3>${product.title}</h3>
-                            <p>${product.description}</p>
-                            <div class="price">${product.price}</div>
+                            <h3>${product.NAME}</h3>
+                            <p>${product.DESCRIPTION}</p>
+                            <div class="price">${product.PRICE}</div>
                             <a href="${waLink}" class="order-btn">Order Now</a>
                         </div>
                     `;
                     productGrid.appendChild(card);
                 });
             })
-            .catch(error => console.log('Products will appear here once added in the dashboard.'));
-
-        // This ensures the owner is redirected to the dashboard after logging in
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (!user) {
-                    window.netlifyIdentity.on("login", () => {
-                        document.location.href = "/admin/";
-                    });
-                }
+            .catch(error => {
+                console.log('Error loading products:', error);
+                document.querySelector('.products').innerHTML = '<p style="text-align:center; width:100%;">Products will appear here once added in your Google Sheet.</p>';
             });
-        }
     </script>
 
 </body>
