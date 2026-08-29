@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noble Store | Premium Perfumes</title>
+    
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">NOBLE STORE</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#shop">Shop</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <p class="small-title">LUXURY • STYLE • CONFIDENCE</p>
+            <h1>
+                Find Your
+                <span>Signature Scent</span>
+            </h1>
+            <p class="hero-text">
+                Discover amazing perfumes at affordable prices.
+                Premium scents starting from just ₦1,500.
+            </p>
+            <div class="hero-buttons">
+                <a href="#shop" class="btn primary-btn">Shop Now</a>
+                <a href="tel:08164821049" class="btn secondary-btn">
+                    Call to Order
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="shop" id="shop">
+        <div class="section-heading">
+            <p>OUR COLLECTION</p>
+            <h2>Popular Perfumes</h2>
+            <span></span>
+        </div>
+
+        <div class="products"></div>
+    </section>
+
+    <section class="delivery">
+        <div class="delivery-box">
+            <h2>We Deliver Nationwide</h2>
+            <p>
+                Order your favourite fragrance from anywhere in Nigeria.
+                Noble Store delivers straight to your doorstep.
+            </p>
+            <a href="https://wa.me/2348164821049" class="btn primary-btn">
+                Order on WhatsApp
+            </a>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="section-heading">
+            <p>ABOUT US</p>
+            <h2>Welcome to Noble Store</h2>
+            <span></span>
+        </div>
+        <div class="about-content">
+            <p>
+                Noble Store is your destination for affordable,
+                beautiful and long-lasting fragrances.
+                Whether you are shopping for yourself or looking
+                for the perfect gift, we have a scent for you.
+            </p>
+            <p>
+                We are located in Lugbe, Abuja and deliver
+                nationwide across Nigeria.
+            </p>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="section-heading">
+            <p>GET IN TOUCH</p>
+            <h2>Contact Noble Store</h2>
+            <span></span>
+        </div>
+        <div class="contact-info">
+            <p><strong>Location:</strong> Lugbe, Abuja</p>
+            <p>
+                <strong>Phone:</strong>
+                <a href="tel:08164821049">0816 482 1049</a>
+            </p>
+            <a href="https://wa.me/2348164821049" class="btn primary-btn">
+                Chat on WhatsApp
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">NOBLE STORE</div>
+        <p>Premium fragrances. Affordable prices.</p>
+        <p class="copyright">© 2026 Noble Store. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Fetch the data file that Decap CMS creates
+        fetch('data/products.json')
+            .then(response => response.json())
+            .then(data => {
+                // Target your specific "products" class container
+                const productGrid = document.querySelector('.products');
+                productGrid.innerHTML = ''; 
+                
+                // Loop through every product the owner added and build the HTML
+                data.items.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    
+                    // Automatically generate the WhatsApp link with the specific product name!
+                    const waLink = `https://wa.me/2348164821049?text=Hello%20Noble%20Store,%20I%20want%20to%20order%20${encodeURIComponent(product.title)}`;
+                    
+                    card.innerHTML = `
+                        <div class="product-image">
+                            <img src="${product.image}" alt="${product.title}">
+                        </div>
+                        <div class="product-info">
+                            <h3>${product.title}</h3>
+                            <p>${product.description}</p>
+                            <div class="price">${product.price}</div>
+                            <a href="${waLink}" class="order-btn">Order Now</a>
+                        </div>
+                    `;
+                    productGrid.appendChild(card);
+                });
+            })
+            .catch(error => console.log('Products will appear here once added in the dashboard.'));
+
+        // This ensures the owner is redirected to the dashboard after logging in
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
+                    });
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
