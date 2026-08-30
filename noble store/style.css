@@ -644,40 +644,52 @@ footer p {
         width: 210px;
     }
 
+    /* ULTRA-COMPACT 2-COLUMN GRID TO FIT 6 PERFUMES ON SCREEN */
     .products {
-        grid-template-columns: 1fr;
-        gap: 20px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
     }
 
-    /* Shrink product card image height on mobile */
+    /* SHRUNK IMAGE HEIGHT FOR MINI CARDS */
     .product-image {
-        height: 220px;
+        height: 110px;
     }
 
-    /* Compact padding inside the product info block */
+    /* TIGHT PADDING AND HIDDEN TEXT DESCRIPTIONS TO SAVE VERTICAL SPACE */
     .product-info {
-        padding: 20px;
+        padding: 10px;
     }
 
     .product-info h3 {
-        font-size: 24px;
+        font-size: 14px;
+        margin-bottom: 2px;
+    }
+
+    .product-info p {
+        display: none;
     }
 
     .price {
-        font-size: 22px;
-        margin-bottom: 15px;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .order-btn {
+        padding: 6px 10px;
+        font-size: 8px;
+        letter-spacing: 0.8px;
     }
 
     .section-heading h2 {
-        font-size: 45px;
+        font-size: 38px;
     }
 
     .delivery h2 {
-        font-size: 45px;
+        font-size: 38px;
     }
 
     .shop,
     .about {
-        padding: 90px 0;
+        padding: 60px 0;
     }
 }
