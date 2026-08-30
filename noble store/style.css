@@ -646,10 +646,26 @@ footer p {
 
     .products {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
 
+    /* Shrink product card image height on mobile */
     .product-image {
-        height: 380px;
+        height: 220px;
+    }
+
+    /* Compact padding inside the product info block */
+    .product-info {
+        padding: 20px;
+    }
+
+    .product-info h3 {
+        font-size: 24px;
+    }
+
+    .price {
+        font-size: 22px;
+        margin-bottom: 15px;
     }
 
     .section-heading h2 {
