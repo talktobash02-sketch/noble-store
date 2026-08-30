@@ -50,6 +50,11 @@
             <span></span>
         </div>
 
+        <!-- SEARCH BAR -->
+        <div class="search-container" style="max-width: 400px; margin: 0 auto 40px auto; padding: 0 15px;">
+            <input type="text" id="searchInput" placeholder="Search perfumes by name or scent..." style="width: 100%; padding: 12px 20px; background: #111a2b; border: 1px solid rgba(185, 190, 200, 0.2); border-radius: 6px; color: var(--text); font-family: 'Montserrat', sans-serif; font-size: 14px; outline: none; transition: 0.3s;">
+        </div>
+
         <div class="products"></div>
     </section>
 
@@ -121,41 +126,61 @@
     </footer>
 
     <script>
-        // Fetch products directly from your live Google Sheet Web App URL
         const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyqJMtPqogjozqDJe6NwtHdtCEymK5DZEizo0CG_y9v26aYrOoW5VWjjzJOGmTvy_1lNQ/exec';
+        let allProducts = [];
 
         fetch(SHEET_URL)
             .then(response => response.json())
             .then(data => {
-                const productGrid = document.querySelector('.products');
-                productGrid.innerHTML = ''; 
-                
-                // Loop through every row/product in your Google Sheet
-                data.forEach(product => {
-                    const card = document.createElement('div');
-                    card.className = 'product-card';
-                    
-                    // Automatically generate the WhatsApp link using your sheet columns (NAME)
-                    const waLink = `https://wa.me/2348169756757?text=Hello%20Noble%20Store,%20I%20want%20to%20order%20${encodeURIComponent(product.NAME)}`;
-                    
-                    card.innerHTML = `
-                        <div class="product-image">
-                            <img src="${product.IMAGE}" alt="${product.NAME}">
-                        </div>
-                        <div class="product-info">
-                            <h3>${product.NAME}</h3>
-                            <p>${product.DESCRIPTION}</p>
-                            <div class="price">${product.PRICE}</div>
-                            <a href="${waLink}" class="order-btn">Order Now</a>
-                        </div>
-                    `;
-                    productGrid.appendChild(card);
-                });
+                allProducts = data;
+                displayProducts(allProducts);
             })
             .catch(error => {
                 console.log('Error loading products:', error);
                 document.querySelector('.products').innerHTML = '<p style="text-align:center; width:100%;">Products will appear here once added in your Google Sheet.</p>';
             });
+
+        // Function to render products onto the page
+        function displayProducts(productsToDisplay) {
+            const productGrid = document.querySelector('.products');
+            productGrid.innerHTML = ''; 
+
+            if (productsToDisplay.length === 0) {
+                productGrid.innerHTML = '<p style="text-align:center; width:100%; color: var(--muted); grid-column: span 2;">No perfumes found matching your search.</p>';
+                return;
+            }
+            
+            productsToDisplay.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                
+                const waLink = `https://wa.me/2348169756757?text=Hello%20Noble%20Store,%20I%20want%20to%20order%20${encodeURIComponent(product.NAME)}`;
+                
+                card.innerHTML = `
+                    <div class="product-image">
+                        <img src="${product.IMAGE}" alt="${product.NAME}">
+                    </div>
+                    <div class="product-info">
+                        <h3>${product.NAME}</h3>
+                        <p>${product.DESCRIPTION}</p>
+                        <div class="price">${product.PRICE}</div>
+                        <a href="${waLink}" class="order-btn">Order Now</a>
+                    </div>
+                `;
+                productGrid.appendChild(card);
+            });
+        }
+
+        // Live search filter logic
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = allProducts.filter(product => {
+                const nameMatch = product.NAME && product.NAME.toLowerCase().includes(query);
+                const descMatch = product.DESCRIPTION && product.DESCRIPTION.toLowerCase().includes(query);
+                return nameMatch || descMatch;
+            });
+            displayProducts(filtered);
+        });
     </script>
 
 </body>
